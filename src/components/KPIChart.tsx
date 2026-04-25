@@ -6,13 +6,13 @@ import {
   ReferenceArea, ResponsiveContainer, ReferenceLine,
 } from 'recharts';
 import type { KPI, DataPoint, CagrResult } from '@/types';
-import { formatValue, PARTY_COLORS, PALETTE, CAGR_LINE_COLOR, computeCagr } from '@/lib/utils';
+import { formatValue, PARTY_COLORS, PALETTE, CAGR_LINE_COLOR } from '@/lib/utils';
 
 interface Props {
   kpi: KPI;
   data: DataPoint[];
   showPartyShading: boolean;
-  showCagr: boolean;
+  cagrResult: CagrResult | null; // pre-computed by KPICard; null = no overlay
   startYear: number;
   endYear: number;
 }
@@ -36,7 +36,7 @@ function getPartyBands(data: DataPoint[]): Band[] {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function CustomTooltip({ active, payload, label, kpi, cagrResult }: any) {
+function CustomTooltip({ active, payload, label, kpi }: any) {
   if (!active || !payload?.length) return null;
   const d: DataPoint = payload[0]?.payload;
   if (!d) return null;
@@ -54,9 +54,9 @@ function CustomTooltip({ active, payload, label, kpi, cagrResult }: any) {
         {d.value !== null ? formatValue(d.value, kpi) : 'N/A'}
         <span className="font-normal text-xs ml-1" style={{ color: PALETTE.medium }}>{kpi.unit}</span>
       </p>
-      {cagrPayload && cagrResult && d.year >= cagrResult.startYear && (
+      {cagrPayload?.value != null && (
         <p className="text-xs mt-1.5 pt-1.5 border-t" style={{ color: CAGR_LINE_COLOR, borderColor: PALETTE.beige }}>
-          4yr CAGR trend: {formatValue(cagrPayload.value, kpi)}
+          CAGR trend: {formatValue(cagrPayload.value, kpi)}
         </p>
       )}
     </div>
@@ -65,27 +65,20 @@ function CustomTooltip({ active, payload, label, kpi, cagrResult }: any) {
 
 type ChartPoint = DataPoint & { cagrTrend?: number | null };
 
-export default function KPIChart({ kpi, data, showPartyShading, showCagr, startYear, endYear }: Props) {
+export default function KPIChart({ kpi, data, showPartyShading, cagrResult, startYear, endYear }: Props) {
   const bands = useMemo(() => (showPartyShading ? getPartyBands(data) : []), [data, showPartyShading]);
 
-  // Compute CAGR and augment data with trend line
-  const { chartData, cagrResult } = useMemo<{ chartData: ChartPoint[]; cagrResult: CagrResult | null }>(() => {
-    if (!showCagr || !kpi.cagr) return { chartData: data, cagrResult: null };
-
-    const result = computeCagr(data, 4);
-    if (!result) return { chartData: data, cagrResult: null };
-
-    const augmented: ChartPoint[] = data.map((d) => {
-      if (d.value === null || d.year < result.startYear || d.year > result.endYear) {
+  // Augment data with CAGR trend values for the overlay line
+  const chartData: ChartPoint[] = useMemo(() => {
+    if (!cagrResult) return data;
+    return data.map((d) => {
+      if (d.value === null || d.year < cagrResult.startYear || d.year > cagrResult.endYear) {
         return { ...d, cagrTrend: null };
       }
-      const yearsElapsed = d.year - result.startYear;
-      const trendVal = result.startValue * Math.pow(1 + result.rate, yearsElapsed);
-      return { ...d, cagrTrend: trendVal };
+      const yearsElapsed = d.year - cagrResult.startYear;
+      return { ...d, cagrTrend: cagrResult.startValue * Math.pow(1 + cagrResult.rate, yearsElapsed) };
     });
-
-    return { chartData: augmented, cagrResult: result };
-  }, [data, showCagr, kpi.cagr]);
+  }, [data, cagrResult]);
 
   const values = data.map((d) => d.value).filter((v): v is number => v !== null);
   const min = Math.min(...values);
@@ -95,32 +88,9 @@ export default function KPIChart({ kpi, data, showPartyShading, showCagr, startY
   const yMax = parseFloat((max + padding).toFixed(2));
 
   const gradId = `grad-${kpi.id}`;
-  const cagrPct = cagrResult ? (cagrResult.rate * 100) : null;
-  const cagrPositive = cagrPct !== null && (kpi.higherIsBetter ? cagrPct > 0 : cagrPct < 0);
-  const cagrLabel = cagrPct !== null
-    ? `${cagrPct >= 0 ? '+' : ''}${cagrPct.toFixed(1)}% / yr`
-    : null;
 
   return (
-    <div className="w-full relative" style={{ height: 300 }}>
-      {/* CAGR badge */}
-      {cagrResult && cagrLabel && (
-        <div
-          className="absolute top-1 right-3 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold shadow-sm border"
-          style={{
-            background: 'rgba(255,255,255,0.95)',
-            borderColor: CAGR_LINE_COLOR + '50',
-            color: cagrPositive ? '#5a9e6f' : '#c45a52',
-          }}
-        >
-          <span
-            className="w-4 h-0.5 inline-block rounded"
-            style={{ background: CAGR_LINE_COLOR, borderTop: `2px dashed ${CAGR_LINE_COLOR}` }}
-          />
-          4yr CAGR {cagrLabel}
-        </div>
-      )}
-
+    <div className="w-full" style={{ height: 300 }}>
       <ResponsiveContainer width="100%" height="100%">
         <ComposedChart data={chartData} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
           <defs>
@@ -159,12 +129,13 @@ export default function KPIChart({ kpi, data, showPartyShading, showCagr, startY
             }}
           />
 
-          <Tooltip content={<CustomTooltip kpi={kpi} cagrResult={cagrResult} />} />
+          <Tooltip content={<CustomTooltip kpi={kpi} />} />
 
           {min < 0 && max > 0 && (
             <ReferenceLine y={0} stroke={PALETTE.medium} strokeDasharray="4 4" strokeOpacity={0.4} />
           )}
 
+          {/* Main area */}
           <Area
             type="monotone"
             dataKey="value"
@@ -177,15 +148,15 @@ export default function KPIChart({ kpi, data, showPartyShading, showCagr, startY
           />
 
           {/* 4-year CAGR trend overlay */}
-          {showCagr && kpi.cagr && cagrResult && (
+          {cagrResult && (
             <Line
               type="monotone"
               dataKey="cagrTrend"
               stroke={CAGR_LINE_COLOR}
-              strokeWidth={1.8}
+              strokeWidth={2}
               strokeDasharray="6 3"
               dot={false}
-              activeDot={false}
+              activeDot={{ r: 4, fill: CAGR_LINE_COLOR, stroke: '#fff', strokeWidth: 1.5 }}
               connectNulls
               legendType="none"
             />
