@@ -102,7 +102,7 @@ export default function KPIChart({ kpi, data, showPartyShading, showCagr, startY
     : null;
 
   return (
-    <div className="w-full relative" style={{ height: 260 }}>
+    <div className="w-full relative" style={{ height: 300 }}>
       {/* CAGR badge */}
       {cagrResult && cagrLabel && (
         <div

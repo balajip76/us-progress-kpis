@@ -116,7 +116,7 @@ export default function Dashboard({ categories }: Props) {
                 </div>
                 <p className="text-sm mb-5 ml-9" style={{ color: PALETTE.medium }}>{cat.description}</p>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   {cat.kpis.map((kpi) => {
                     const filtered = filterByRange(kpi.data, startYear, endYear);
                     if (!filtered.length) return null;
