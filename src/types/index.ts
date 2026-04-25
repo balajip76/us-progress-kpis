@@ -24,7 +24,15 @@ export interface KPI {
   higherIsBetter: boolean;
   format?: 'number' | 'percent' | 'dollar' | 'decimal';
   decimals?: number;
+  cagr?: boolean; // whether a 4-yr CAGR is meaningful for this metric
   data: DataPoint[];
+}
+
+export interface CagrResult {
+  rate: number;        // e.g. 0.032 = 3.2%
+  startYear: number;
+  endYear: number;
+  startValue: number;
 }
 
 export interface Category {

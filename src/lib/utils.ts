@@ -1,7 +1,7 @@
-import type { DataPoint, KPI, PartyStats, Party } from '@/types';
+import type { DataPoint, KPI, PartyStats, Party, CagrResult } from '@/types';
 
 export function formatValue(value: number, kpi: KPI): string {
-  const { format = 'number', decimals = 1, unit } = kpi;
+  const { format = 'number', decimals = 1 } = kpi;
   if (format === 'dollar') {
     return '$' + value.toLocaleString('en-US', { maximumFractionDigits: 0 });
   }
@@ -43,7 +43,6 @@ export function computePartyStats(data: DataPoint[], higherIsBetter: boolean): R
       ? { year: lowest.year, value: lowest.value as number }
       : { year: highest.year, value: highest.value as number };
 
-    // Simple trend: compare first half avg to second half avg
     const mid = Math.floor(points.length / 2);
     const firstHalf = points.slice(0, mid);
     const secondHalf = points.slice(mid);
@@ -63,8 +62,33 @@ export function computePartyStats(data: DataPoint[], higherIsBetter: boolean): R
   return { R: stats('R'), D: stats('D') };
 }
 
+/** Compute 4-year CAGR from the data. Returns null if not applicable. */
+export function computeCagr(data: DataPoint[], windowYears = 4): CagrResult | null {
+  const valid = data.filter((d) => d.value !== null && (d.value as number) > 0);
+  if (valid.length < 2) return null;
+
+  const endPoint = valid[valid.length - 1];
+  const targetStartYear = endPoint.year - windowYears;
+
+  // Find the point closest to targetStartYear without going over
+  let startPoint: DataPoint | null = null;
+  for (const d of valid) {
+    if (d.year <= targetStartYear) {
+      startPoint = d;
+    } else {
+      break;
+    }
+  }
+  if (!startPoint || startPoint.year >= endPoint.year) return null;
+
+  const years = endPoint.year - startPoint.year;
+  const rate = Math.pow((endPoint.value as number) / (startPoint.value as number), 1 / years) - 1;
+
+  return { rate, startYear: startPoint.year, endYear: endPoint.year, startValue: startPoint.value as number };
+}
+
 export function getYearRange(preset: string, customStart?: number, customEnd?: number): [number, number] {
-  const now = 2024;
+  const now = 2026;
   switch (preset) {
     case '5yr':   return [now - 4, now];
     case '10yr':  return [now - 9, now];
@@ -93,3 +117,5 @@ export const PALETTE = {
   beige:  '#CCB7AE',
   warm:   '#D6CFCB',
 } as const;
+
+export const CAGR_LINE_COLOR = '#7a6540';

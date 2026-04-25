@@ -10,11 +10,12 @@ interface Props {
   kpi: KPI;
   data: DataPoint[];
   showPartyShading: boolean;
+  showCagr: boolean;
   startYear: number;
   endYear: number;
 }
 
-export default function KPICard({ kpi, data, showPartyShading, startYear, endYear }: Props) {
+export default function KPICard({ kpi, data, showPartyShading, showCagr, startYear, endYear }: Props) {
   const [showComparison, setShowComparison] = useState(false);
 
   const latest = [...data].filter((d) => d.value !== null).sort((a, b) => b.year - a.year)[0];
@@ -64,6 +65,7 @@ export default function KPICard({ kpi, data, showPartyShading, startYear, endYea
           kpi={kpi}
           data={data}
           showPartyShading={showPartyShading}
+          showCagr={showCagr}
           startYear={startYear}
           endYear={endYear}
         />

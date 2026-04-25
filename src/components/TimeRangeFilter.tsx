@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { PALETTE } from '@/lib/utils';
+import { PALETTE, CAGR_LINE_COLOR } from '@/lib/utils';
 
 export type RangePreset = '5yr' | '10yr' | '20yr' | '50yr' | '1970s' | '1980s' | '1990s' | '2000s' | '2010s' | '2020s' | 'custom';
 
@@ -10,9 +10,11 @@ interface Props {
   customStart: number;
   customEnd: number;
   showPartyShading: boolean;
+  showCagr: boolean;
   onPresetChange: (p: RangePreset) => void;
   onCustomChange: (start: number, end: number) => void;
   onToggleShading: () => void;
+  onToggleCagr: () => void;
 }
 
 const PRESETS: { label: string; value: RangePreset }[] = [
@@ -31,10 +33,11 @@ const PRESETS: { label: string; value: RangePreset }[] = [
 
 export default function TimeRangeFilter({
   preset, customStart, customEnd,
-  showPartyShading, onPresetChange, onCustomChange, onToggleShading,
+  showPartyShading, showCagr,
+  onPresetChange, onCustomChange, onToggleShading, onToggleCagr,
 }: Props) {
   const [localStart, setLocalStart] = useState(customStart);
-  const [localEnd, setLocalEnd] = useState(customEnd);
+  const [localEnd, setLocalEnd]     = useState(customEnd);
 
   return (
     <div
@@ -66,10 +69,7 @@ export default function TimeRangeFilter({
       {preset === 'custom' && (
         <div className="flex items-center gap-2 ml-2">
           <input
-            type="number"
-            min={1975}
-            max={localEnd}
-            value={localStart}
+            type="number" min={1975} max={localEnd} value={localStart}
             onChange={(e) => setLocalStart(Number(e.target.value))}
             onBlur={() => onCustomChange(localStart, localEnd)}
             className="w-16 text-xs px-2 py-1 rounded-lg border outline-none"
@@ -77,10 +77,7 @@ export default function TimeRangeFilter({
           />
           <span className="text-xs" style={{ color: PALETTE.medium }}>–</span>
           <input
-            type="number"
-            min={localStart}
-            max={2024}
-            value={localEnd}
+            type="number" min={localStart} max={2026} value={localEnd}
             onChange={(e) => setLocalEnd(Number(e.target.value))}
             onBlur={() => onCustomChange(localStart, localEnd)}
             className="w-16 text-xs px-2 py-1 rounded-lg border outline-none"
@@ -89,8 +86,23 @@ export default function TimeRangeFilter({
         </div>
       )}
 
-      {/* Spacer */}
       <div className="flex-1" />
+
+      {/* 4yr CAGR toggle */}
+      <button
+        onClick={onToggleCagr}
+        className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all duration-150"
+        style={{
+          background: showCagr ? CAGR_LINE_COLOR : 'transparent',
+          color: showCagr ? '#fff' : CAGR_LINE_COLOR,
+          borderColor: CAGR_LINE_COLOR + '60',
+        }}
+      >
+        <span className="inline-flex items-center gap-0.5">
+          <span className="w-4 h-px border-t-2 border-dashed" style={{ borderColor: showCagr ? '#fff' : CAGR_LINE_COLOR }} />
+        </span>
+        4yr CAGR
+      </button>
 
       {/* Party shading toggle */}
       <button
@@ -102,10 +114,8 @@ export default function TimeRangeFilter({
           borderColor: PALETTE.deep + '40',
         }}
       >
-        <span
-          className="w-3 h-3 rounded-sm inline-block"
-          style={{ background: showPartyShading ? '#fff' : PALETTE.deep }}
-        />
+        <span className="w-3 h-3 rounded-sm inline-block"
+          style={{ background: showPartyShading ? '#fff' : PALETTE.deep }} />
         Party shading
       </button>
     </div>

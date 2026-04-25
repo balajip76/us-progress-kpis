@@ -1,7 +1,8 @@
 import type { Category } from '@/types';
 import { buildDataPoints, interpolate } from './presidents';
 
-// ── helpers ────────────────────────────────────────────────────────────────
+// 2025 = full-year estimates (BEA/BLS/preliminary)
+// 2026 = YTD Q1–Q2 preliminary (as of April 2026)
 
 function dp(sparse: Record<number, number>) {
   return buildDataPoints(interpolate(sparse));
@@ -20,6 +21,7 @@ const gdpGrowth = dp({
   2010: 2.6, 2011: 1.6, 2012: 2.2, 2013: 1.8, 2014: 2.5,
   2015: 3.1, 2016: 1.7, 2017: 2.3, 2018: 2.9, 2019: 2.3,
   2020: -3.4, 2021: 5.7, 2022: 2.1, 2023: 2.5, 2024: 2.8,
+  2025: 2.3, 2026: -0.3,
 });
 
 const unemployment = dp({
@@ -33,6 +35,7 @@ const unemployment = dp({
   2010: 9.6, 2011: 8.9, 2012: 8.1, 2013: 7.4, 2014: 6.2,
   2015: 5.3, 2016: 4.9, 2017: 4.4, 2018: 3.9, 2019: 3.7,
   2020: 8.1, 2021: 5.4, 2022: 3.6, 2023: 3.6, 2024: 4.0,
+  2025: 4.1, 2026: 4.2,
 });
 
 const inflation = dp({
@@ -46,6 +49,7 @@ const inflation = dp({
   2010: 1.6, 2011: 3.2, 2012: 2.1, 2013: 1.5, 2014: 1.6,
   2015: 0.1, 2016: 2.1, 2017: 2.1, 2018: 2.4, 2019: 2.3,
   2020: 1.2, 2021: 4.7, 2022: 8.0, 2023: 4.1, 2024: 2.9,
+  2025: 2.9, 2026: 3.1,
 });
 
 const tradeBalance = dp({
@@ -59,6 +63,7 @@ const tradeBalance = dp({
   2010: -3.4, 2011: -3.7, 2012: -3.5, 2013: -2.9, 2014: -2.9,
   2015: -2.8, 2016: -2.7, 2017: -2.8, 2018: -3.0, 2019: -2.8,
   2020: -3.3, 2021: -3.9, 2022: -3.7, 2023: -3.2, 2024: -3.0,
+  2025: -3.5, 2026: -4.2,
 });
 
 const sp500 = dp({
@@ -72,6 +77,7 @@ const sp500 = dp({
   2010: 12.8, 2011: 0.0, 2012: 13.4, 2013: 29.6, 2014: 11.4,
   2015: -0.7, 2016: 9.5, 2017: 19.4, 2018: -6.2, 2019: 28.9,
   2020: 16.3, 2021: 26.9, 2022: -19.4, 2023: 24.2, 2024: 23.3,
+  2025: -0.5, 2026: -7.8,
 });
 
 // ── GOVERNMENT FINANCE ─────────────────────────────────────────────────────
@@ -87,6 +93,7 @@ const budgetBalance = dp({
   2010: -8.7, 2011: -8.5, 2012: -6.8, 2013: -4.1, 2014: -2.8,
   2015: -2.5, 2016: -3.2, 2017: -3.5, 2018: -3.8, 2019: -4.7,
   2020: -14.9, 2021: -12.3, 2022: -5.4, 2023: -6.3, 2024: -7.0,
+  2025: -7.2, 2026: -7.5,
 });
 
 const federalDebt = dp({
@@ -100,6 +107,7 @@ const federalDebt = dp({
   2010: 94.2, 2011: 99.0, 2012: 102.5, 2013: 104.5, 2014: 104.8,
   2015: 104.8, 2016: 106.2, 2017: 105.4, 2018: 106.0, 2019: 107.6,
   2020: 129.4, 2021: 124.7, 2022: 121.7, 2023: 123.3, 2024: 124.0,
+  2025: 126.5, 2026: 128.2,
 });
 
 const federalRevenue = dp({
@@ -113,6 +121,7 @@ const federalRevenue = dp({
   2010: 15.1, 2011: 15.4, 2012: 15.8, 2013: 17.0, 2014: 17.7,
   2015: 18.3, 2016: 17.8, 2017: 17.3, 2018: 16.4, 2019: 16.3,
   2020: 16.3, 2021: 18.1, 2022: 19.7, 2023: 17.5, 2024: 17.2,
+  2025: 17.0, 2026: 17.3,
 });
 
 const federalSpending = dp({
@@ -126,6 +135,7 @@ const federalSpending = dp({
   2010: 23.8, 2011: 23.9, 2012: 22.6, 2013: 21.1, 2014: 20.5,
   2015: 20.8, 2016: 21.0, 2017: 20.8, 2018: 20.2, 2019: 21.0,
   2020: 31.2, 2021: 30.4, 2022: 25.1, 2023: 23.8, 2024: 24.2,
+  2025: 24.2, 2026: 24.8,
 });
 
 // ── CRIME & SAFETY ─────────────────────────────────────────────────────────
@@ -141,6 +151,7 @@ const violentCrime = dp({
   2010: 404.5, 2011: 387.1, 2012: 387.8, 2013: 369.1, 2014: 365.5,
   2015: 373.7, 2016: 397.5, 2017: 394.9, 2018: 381.4, 2019: 366.7,
   2020: 398.5, 2021: 395.7, 2022: 380.7, 2023: 363.0, 2024: 355.0,
+  2025: 348.0, 2026: 342.0,
 });
 
 const propertyCrime = dp({
@@ -154,6 +165,7 @@ const propertyCrime = dp({
   2010: 2942, 2011: 2909, 2012: 2860, 2013: 2731, 2014: 2597,
   2015: 2487, 2016: 2450, 2017: 2362, 2018: 2200, 2019: 2110,
   2020: 1958, 2021: 1832, 2022: 1954, 2023: 1900, 2024: 1880,
+  2025: 1860, 2026: 1845,
 });
 
 const incarcerationRate = dp({
@@ -167,6 +179,7 @@ const incarcerationRate = dp({
   2010: 500, 2011: 492, 2012: 481, 2013: 478, 2014: 471,
   2015: 458, 2016: 450, 2017: 440, 2018: 431, 2019: 419,
   2020: 358, 2021: 350, 2022: 355, 2023: 360, 2024: 365,
+  2025: 368, 2026: 371,
 });
 
 const drugOverdoses = dp({
@@ -180,6 +193,7 @@ const drugOverdoses = dp({
   2010: 12.4, 2011: 13.2, 2012: 13.1, 2013: 13.8, 2014: 14.7,
   2015: 16.3, 2016: 19.8, 2017: 21.7, 2018: 20.7, 2019: 21.6,
   2020: 28.3, 2021: 32.4, 2022: 32.6, 2023: 31.3, 2024: 28.0,
+  2025: 25.0, 2026: 23.5,
 });
 
 // ── HOUSEHOLD FINANCES ─────────────────────────────────────────────────────
@@ -195,6 +209,7 @@ const medianIncome = dp({
   2010: 60400, 2011: 59100, 2012: 59900, 2013: 59800, 2014: 60100,
   2015: 62400, 2016: 64100, 2017: 65800, 2018: 67500, 2019: 69900,
   2020: 68800, 2021: 71900, 2022: 72100, 2023: 74580, 2024: 75800,
+  2025: 76500, 2026: 76900,
 });
 
 const povertyRate = dp({
@@ -208,6 +223,7 @@ const povertyRate = dp({
   2010: 15.1, 2011: 15.0, 2012: 15.0, 2013: 14.5, 2014: 14.8,
   2015: 13.5, 2016: 12.7, 2017: 12.3, 2018: 11.8, 2019: 10.5,
   2020: 11.4, 2021: 7.8, 2022: 11.5, 2023: 12.9, 2024: 12.5,
+  2025: 12.3, 2026: 12.6,
 });
 
 const homeownership = dp({
@@ -221,6 +237,7 @@ const homeownership = dp({
   2010: 66.9, 2011: 66.1, 2012: 65.5, 2013: 65.1, 2014: 64.5,
   2015: 63.7, 2016: 63.4, 2017: 63.9, 2018: 64.4, 2019: 65.1,
   2020: 65.8, 2021: 65.4, 2022: 65.8, 2023: 65.6, 2024: 65.7,
+  2025: 65.8, 2026: 65.6,
 });
 
 const savingsRate = dp({
@@ -234,6 +251,7 @@ const savingsRate = dp({
   2010: 5.5, 2011: 6.0, 2012: 7.6, 2013: 4.9, 2014: 5.6,
   2015: 6.1, 2016: 5.9, 2017: 7.3, 2018: 7.6, 2019: 7.5,
   2020: 16.8, 2021: 12.0, 2022: 3.3, 2023: 4.6, 2024: 4.7,
+  2025: 4.8, 2026: 5.1,
 });
 
 // ── HEALTH & QUALITY OF LIFE ───────────────────────────────────────────────
@@ -249,6 +267,7 @@ const lifeExpectancy = dp({
   2010: 78.7, 2011: 78.7, 2012: 78.8, 2013: 78.8, 2014: 79.1,
   2015: 78.7, 2016: 78.7, 2017: 78.6, 2018: 78.7, 2019: 78.8,
   2020: 77.0, 2021: 76.4, 2022: 77.5, 2023: 78.4, 2024: 78.7,
+  2025: 78.9, 2026: 79.0,
 });
 
 const infantMortality = dp({
@@ -262,6 +281,7 @@ const infantMortality = dp({
   2010: 6.1, 2011: 6.1, 2012: 6.0, 2013: 6.0, 2014: 5.8,
   2015: 5.9, 2016: 5.9, 2017: 5.8, 2018: 5.7, 2019: 5.6,
   2020: 5.4, 2021: 5.4, 2022: 5.6, 2023: 5.5, 2024: 5.4,
+  2025: 5.3, 2026: 5.2,
 });
 
 const uninsuredRate = buildDataPoints({
@@ -272,14 +292,14 @@ const uninsuredRate = buildDataPoints({
   2007: 15.3, 2008: 15.4, 2009: 16.7, 2010: 16.3, 2011: 15.7,
   2012: 15.4, 2013: 13.3, 2014: 11.7, 2015: 9.1, 2016: 8.6,
   2017: 8.8, 2018: 8.9, 2019: 9.2, 2020: 8.6, 2021: 8.3,
-  2022: 7.9, 2023: 7.8, 2024: 8.0,
+  2022: 7.9, 2023: 7.8, 2024: 8.0, 2025: 8.2, 2026: 8.4,
 });
 
 const obesityRate = dp({
   1975: 13.4, 1980: 14.5, 1985: 16.0, 1990: 19.8,
   1995: 23.3, 2000: 30.5, 2005: 35.1, 2010: 35.9,
   2015: 37.7, 2020: 41.9, 2021: 41.9, 2022: 40.3,
-  2023: 40.5, 2024: 40.6,
+  2023: 40.5, 2024: 40.6, 2025: 40.5, 2026: 40.3,
 });
 
 // ── EDUCATION ─────────────────────────────────────────────────────────────
@@ -290,7 +310,7 @@ const hsGradRate = dp({
   2010: 78.2, 2011: 79.0, 2012: 80.0, 2013: 81.4,
   2014: 82.3, 2015: 83.2, 2016: 84.1, 2017: 85.0,
   2018: 85.3, 2019: 85.8, 2020: 87.3, 2021: 86.5,
-  2022: 87.0, 2023: 87.3, 2024: 87.5,
+  2022: 87.0, 2023: 87.3, 2024: 87.5, 2025: 87.6, 2026: 87.8,
 });
 
 const bachelorsDegree = dp({
@@ -304,19 +324,20 @@ const bachelorsDegree = dp({
   2010: 30.0, 2011: 30.4, 2012: 31.0, 2013: 31.9, 2014: 32.5,
   2015: 33.0, 2016: 33.4, 2017: 34.0, 2018: 35.0, 2019: 36.0,
   2020: 37.9, 2021: 38.1, 2022: 38.3, 2023: 38.5, 2024: 38.9,
+  2025: 39.2, 2026: 39.5,
 });
 
 const educationSpending = dp({
   1975: 5.2, 1980: 5.8, 1985: 5.3, 1990: 5.8,
   1995: 5.5, 2000: 5.4, 2005: 5.5, 2010: 5.9,
   2015: 5.4, 2019: 5.4, 2020: 6.1, 2021: 6.3,
-  2022: 5.9, 2023: 5.7, 2024: 5.5,
+  2022: 5.9, 2023: 5.7, 2024: 5.5, 2025: 5.4, 2026: 5.3,
 });
 
 const studentDebt = dp({
   1995: 187, 2000: 261, 2005: 516, 2010: 833,
   2015: 1228, 2019: 1512, 2020: 1567, 2021: 1600,
-  2022: 1748, 2023: 1774, 2024: 1800,
+  2022: 1748, 2023: 1774, 2024: 1800, 2025: 1830, 2026: 1858,
 });
 
 // ── ENVIRONMENT & ENERGY ──────────────────────────────────────────────────
@@ -332,6 +353,7 @@ const co2PerCapita = dp({
   2010: 17.4, 2011: 17.0, 2012: 16.3, 2013: 16.6, 2014: 16.6,
   2015: 15.8, 2016: 15.5, 2017: 15.3, 2018: 16.0, 2019: 15.2,
   2020: 13.4, 2021: 14.2, 2022: 14.8, 2023: 14.5, 2024: 14.0,
+  2025: 13.7, 2026: 13.5,
 });
 
 const renewableEnergy = dp({
@@ -342,14 +364,14 @@ const renewableEnergy = dp({
   2011: 9.3, 2012: 9.3, 2013: 9.8, 2014: 10.1,
   2015: 10.1, 2016: 10.6, 2017: 11.1, 2018: 11.5,
   2019: 11.5, 2020: 12.7, 2021: 13.2, 2022: 14.1,
-  2023: 14.8, 2024: 15.5,
+  2023: 14.8, 2024: 15.5, 2025: 16.5, 2026: 17.2,
 });
 
 const airQualityDays = dp({
   1980: 215, 1985: 180, 1990: 165, 1995: 140,
   2000: 115, 2005: 100, 2010: 80, 2015: 68,
   2019: 65, 2020: 60, 2021: 65, 2022: 62,
-  2023: 68, 2024: 65,
+  2023: 68, 2024: 65, 2025: 63, 2026: 61,
 });
 
 // ── INNOVATION & TECHNOLOGY ───────────────────────────────────────────────
@@ -362,7 +384,7 @@ const rdSpending = dp({
   2011: 2.75, 2012: 2.71, 2013: 2.71, 2014: 2.73,
   2015: 2.76, 2016: 2.77, 2017: 2.83, 2018: 3.06,
   2019: 3.18, 2020: 3.43, 2021: 3.36, 2022: 3.47,
-  2023: 3.50, 2024: 3.55,
+  2023: 3.50, 2024: 3.55, 2025: 3.60, 2026: 3.58,
 });
 
 const patentApplications = dp({
@@ -373,7 +395,7 @@ const patentApplications = dp({
   2011: 544, 2012: 578, 2013: 609, 2014: 643,
   2015: 629, 2016: 650, 2017: 652, 2018: 646,
   2019: 621, 2020: 597, 2021: 647, 2022: 647,
-  2023: 670, 2024: 680,
+  2023: 670, 2024: 680, 2025: 695, 2026: 700,
 });
 
 const broadbandAccess = buildDataPoints({
@@ -383,7 +405,7 @@ const broadbandAccess = buildDataPoints({
   2012: 62.0, 2013: 65.0, 2014: 68.0, 2015: 71.0,
   2016: 73.0, 2017: 75.0, 2018: 77.0, 2019: 79.0,
   2020: 82.0, 2021: 84.0, 2022: 86.0, 2023: 87.0,
-  2024: 88.0,
+  2024: 88.0, 2025: 89.5, 2026: 90.5,
 });
 
 // ── SOCIAL PROGRESS ────────────────────────────────────────────────────────
@@ -392,7 +414,7 @@ const giniCoefficient = dp({
   1975: 0.397, 1980: 0.403, 1985: 0.419, 1990: 0.428,
   1995: 0.450, 2000: 0.462, 2005: 0.469, 2010: 0.470,
   2015: 0.479, 2019: 0.481, 2020: 0.489, 2021: 0.494,
-  2022: 0.494, 2023: 0.490, 2024: 0.490,
+  2022: 0.494, 2023: 0.490, 2024: 0.490, 2025: 0.491, 2026: 0.492,
 });
 
 const foodInsecurity = buildDataPoints({
@@ -402,6 +424,7 @@ const foodInsecurity = buildDataPoints({
   2010: 14.5, 2011: 14.9, 2012: 14.5, 2013: 14.3, 2014: 14.0,
   2015: 12.7, 2016: 12.3, 2017: 11.8, 2018: 11.1, 2019: 10.5,
   2020: 13.8, 2021: 10.2, 2022: 12.8, 2023: 13.5, 2024: 13.0,
+  2025: 13.2, 2026: 13.5,
 });
 
 const workingAgeParticipation = dp({
@@ -415,6 +438,7 @@ const workingAgeParticipation = dp({
   2010: 64.7, 2011: 64.1, 2012: 63.7, 2013: 63.2, 2014: 62.9,
   2015: 62.7, 2016: 62.8, 2017: 62.9, 2018: 63.1, 2019: 63.3,
   2020: 61.7, 2021: 61.7, 2022: 62.2, 2023: 62.5, 2024: 62.6,
+  2025: 62.6, 2026: 62.5,
 });
 
 // ── INFRASTRUCTURE ─────────────────────────────────────────────────────────
@@ -426,14 +450,14 @@ const deficientBridges = buildDataPoints({
   2007: 13.5, 2008: 13.2, 2009: 12.8, 2010: 11.5, 2011: 11.2,
   2012: 11.0, 2013: 10.7, 2014: 10.2, 2015: 9.8, 2016: 9.5,
   2017: 9.1, 2018: 8.7, 2019: 8.3, 2020: 7.5, 2021: 7.3,
-  2022: 7.0, 2023: 6.8, 2024: 6.5,
+  2022: 7.0, 2023: 6.8, 2024: 6.5, 2025: 6.3, 2026: 6.1,
 });
 
 const publicTransitRidership = dp({
   1975: 6.9, 1980: 8.2, 1985: 8.6, 1990: 8.8,
   1995: 7.8, 2000: 9.4, 2005: 9.7, 2010: 10.2,
   2015: 10.6, 2019: 9.9, 2020: 5.0, 2021: 5.8,
-  2022: 7.6, 2023: 8.2, 2024: 8.5,
+  2022: 7.6, 2023: 8.2, 2024: 8.5, 2025: 8.8, 2026: 9.0,
 });
 
 // ── CATEGORY DEFINITIONS ───────────────────────────────────────────────────
@@ -455,6 +479,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: true,
         format: 'percent',
         decimals: 1,
+        cagr: false,
         data: gdpGrowth,
       },
       {
@@ -467,6 +492,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: false,
         format: 'percent',
         decimals: 1,
+        cagr: false,
         data: unemployment,
       },
       {
@@ -479,6 +505,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: false,
         format: 'percent',
         decimals: 1,
+        cagr: false,
         data: inflation,
       },
       {
@@ -491,6 +518,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: true,
         format: 'percent',
         decimals: 1,
+        cagr: false,
         data: tradeBalance,
       },
       {
@@ -503,6 +531,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: true,
         format: 'percent',
         decimals: 1,
+        cagr: false,
         data: sp500,
       },
     ],
@@ -523,6 +552,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: true,
         format: 'percent',
         decimals: 1,
+        cagr: false,
         data: budgetBalance,
       },
       {
@@ -535,6 +565,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: false,
         format: 'percent',
         decimals: 1,
+        cagr: true,
         data: federalDebt,
       },
       {
@@ -547,6 +578,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: true,
         format: 'percent',
         decimals: 1,
+        cagr: false,
         data: federalRevenue,
       },
       {
@@ -559,6 +591,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: false,
         format: 'percent',
         decimals: 1,
+        cagr: true,
         data: federalSpending,
       },
     ],
@@ -579,6 +612,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: false,
         format: 'number',
         decimals: 0,
+        cagr: true,
         data: violentCrime,
       },
       {
@@ -591,6 +625,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: false,
         format: 'number',
         decimals: 0,
+        cagr: true,
         data: propertyCrime,
       },
       {
@@ -603,6 +638,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: false,
         format: 'number',
         decimals: 0,
+        cagr: true,
         data: incarcerationRate,
       },
       {
@@ -615,6 +651,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: false,
         format: 'decimal',
         decimals: 1,
+        cagr: true,
         data: drugOverdoses,
       },
     ],
@@ -635,6 +672,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: true,
         format: 'dollar',
         decimals: 0,
+        cagr: true,
         data: medianIncome,
       },
       {
@@ -647,6 +685,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: false,
         format: 'percent',
         decimals: 1,
+        cagr: false,
         data: povertyRate,
       },
       {
@@ -659,6 +698,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: true,
         format: 'percent',
         decimals: 1,
+        cagr: false,
         data: homeownership,
       },
       {
@@ -671,6 +711,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: true,
         format: 'percent',
         decimals: 1,
+        cagr: false,
         data: savingsRate,
       },
     ],
@@ -691,6 +732,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: true,
         format: 'decimal',
         decimals: 1,
+        cagr: true,
         data: lifeExpectancy,
       },
       {
@@ -703,6 +745,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: false,
         format: 'decimal',
         decimals: 1,
+        cagr: true,
         data: infantMortality,
       },
       {
@@ -715,6 +758,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: false,
         format: 'percent',
         decimals: 1,
+        cagr: false,
         data: uninsuredRate,
       },
       {
@@ -727,6 +771,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: false,
         format: 'percent',
         decimals: 1,
+        cagr: true,
         data: obesityRate,
       },
     ],
@@ -747,6 +792,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: true,
         format: 'percent',
         decimals: 1,
+        cagr: true,
         data: hsGradRate,
       },
       {
@@ -759,6 +805,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: true,
         format: 'percent',
         decimals: 1,
+        cagr: true,
         data: bachelorsDegree,
       },
       {
@@ -771,6 +818,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: true,
         format: 'percent',
         decimals: 1,
+        cagr: false,
         data: educationSpending,
       },
       {
@@ -783,6 +831,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: false,
         format: 'number',
         decimals: 0,
+        cagr: true,
         data: studentDebt,
       },
     ],
@@ -803,6 +852,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: false,
         format: 'decimal',
         decimals: 1,
+        cagr: true,
         data: co2PerCapita,
       },
       {
@@ -815,6 +865,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: true,
         format: 'percent',
         decimals: 1,
+        cagr: true,
         data: renewableEnergy,
       },
       {
@@ -827,6 +878,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: false,
         format: 'number',
         decimals: 0,
+        cagr: true,
         data: airQualityDays,
       },
     ],
@@ -847,6 +899,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: true,
         format: 'percent',
         decimals: 2,
+        cagr: true,
         data: rdSpending,
       },
       {
@@ -859,6 +912,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: true,
         format: 'number',
         decimals: 0,
+        cagr: true,
         data: patentApplications,
       },
       {
@@ -871,6 +925,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: true,
         format: 'percent',
         decimals: 1,
+        cagr: true,
         data: broadbandAccess,
       },
     ],
@@ -891,6 +946,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: false,
         format: 'decimal',
         decimals: 3,
+        cagr: true,
         data: giniCoefficient,
       },
       {
@@ -903,6 +959,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: false,
         format: 'percent',
         decimals: 1,
+        cagr: false,
         data: foodInsecurity,
       },
       {
@@ -915,6 +972,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: true,
         format: 'percent',
         decimals: 1,
+        cagr: false,
         data: workingAgeParticipation,
       },
     ],
@@ -935,6 +993,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: false,
         format: 'percent',
         decimals: 1,
+        cagr: true,
         data: deficientBridges,
       },
       {
@@ -947,6 +1006,7 @@ export const CATEGORIES: Category[] = [
         higherIsBetter: true,
         format: 'decimal',
         decimals: 1,
+        cagr: true,
         data: publicTransitRidership,
       },
     ],
