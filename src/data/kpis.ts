@@ -1,0 +1,956 @@
+import type { Category } from '@/types';
+import { buildDataPoints, interpolate } from './presidents';
+
+// ── helpers ────────────────────────────────────────────────────────────────
+
+function dp(sparse: Record<number, number>) {
+  return buildDataPoints(interpolate(sparse));
+}
+
+// ── ECONOMIC ───────────────────────────────────────────────────────────────
+
+const gdpGrowth = dp({
+  1975: -0.2, 1976: 5.4, 1977: 4.6, 1978: 5.5, 1979: 3.2,
+  1980: -0.3, 1981: 2.5, 1982: -1.8, 1983: 4.6, 1984: 7.2,
+  1985: 4.2, 1986: 3.5, 1987: 3.5, 1988: 4.2, 1989: 3.7,
+  1990: 1.9, 1991: -0.1, 1992: 3.5, 1993: 2.8, 1994: 4.0,
+  1995: 2.7, 1996: 3.8, 1997: 4.5, 1998: 4.5, 1999: 4.8,
+  2000: 4.1, 2001: 1.0, 2002: 1.7, 2003: 2.9, 2004: 3.8,
+  2005: 3.5, 2006: 2.9, 2007: 1.9, 2008: -0.1, 2009: -2.5,
+  2010: 2.6, 2011: 1.6, 2012: 2.2, 2013: 1.8, 2014: 2.5,
+  2015: 3.1, 2016: 1.7, 2017: 2.3, 2018: 2.9, 2019: 2.3,
+  2020: -3.4, 2021: 5.7, 2022: 2.1, 2023: 2.5, 2024: 2.8,
+});
+
+const unemployment = dp({
+  1975: 8.5, 1976: 7.7, 1977: 7.1, 1978: 6.1, 1979: 5.9,
+  1980: 7.2, 1981: 7.6, 1982: 9.7, 1983: 9.6, 1984: 7.5,
+  1985: 7.2, 1986: 7.0, 1987: 6.2, 1988: 5.5, 1989: 5.3,
+  1990: 5.6, 1991: 6.8, 1992: 7.5, 1993: 6.9, 1994: 6.1,
+  1995: 5.6, 1996: 5.4, 1997: 4.9, 1998: 4.5, 1999: 4.2,
+  2000: 4.0, 2001: 4.7, 2002: 5.8, 2003: 6.0, 2004: 5.5,
+  2005: 5.1, 2006: 4.6, 2007: 4.6, 2008: 5.8, 2009: 9.3,
+  2010: 9.6, 2011: 8.9, 2012: 8.1, 2013: 7.4, 2014: 6.2,
+  2015: 5.3, 2016: 4.9, 2017: 4.4, 2018: 3.9, 2019: 3.7,
+  2020: 8.1, 2021: 5.4, 2022: 3.6, 2023: 3.6, 2024: 4.0,
+});
+
+const inflation = dp({
+  1975: 9.1, 1976: 5.8, 1977: 6.5, 1978: 7.6, 1979: 11.3,
+  1980: 13.5, 1981: 10.3, 1982: 6.2, 1983: 3.2, 1984: 4.3,
+  1985: 3.6, 1986: 1.9, 1987: 3.6, 1988: 4.1, 1989: 4.8,
+  1990: 5.4, 1991: 4.2, 1992: 3.0, 1993: 3.0, 1994: 2.6,
+  1995: 2.8, 1996: 3.0, 1997: 2.3, 1998: 1.6, 1999: 2.2,
+  2000: 3.4, 2001: 2.8, 2002: 1.6, 2003: 2.3, 2004: 2.7,
+  2005: 3.4, 2006: 3.2, 2007: 2.8, 2008: 3.8, 2009: -0.4,
+  2010: 1.6, 2011: 3.2, 2012: 2.1, 2013: 1.5, 2014: 1.6,
+  2015: 0.1, 2016: 2.1, 2017: 2.1, 2018: 2.4, 2019: 2.3,
+  2020: 1.2, 2021: 4.7, 2022: 8.0, 2023: 4.1, 2024: 2.9,
+});
+
+const tradeBalance = dp({
+  1975: 0.9, 1976: -0.3, 1977: -0.8, 1978: -1.1, 1979: -0.6,
+  1980: -0.3, 1981: -0.3, 1982: -0.4, 1983: -1.3, 1984: -2.4,
+  1985: -2.7, 1986: -3.0, 1987: -2.9, 1988: -2.3, 1989: -1.8,
+  1990: -1.5, 1991: -0.5, 1992: -0.7, 1993: -1.1, 1994: -1.6,
+  1995: -1.5, 1996: -1.5, 1997: -1.7, 1998: -2.2, 1999: -2.7,
+  2000: -3.7, 2001: -3.5, 2002: -3.8, 2003: -4.4, 2004: -5.3,
+  2005: -5.7, 2006: -6.0, 2007: -5.1, 2008: -5.0, 2009: -2.7,
+  2010: -3.4, 2011: -3.7, 2012: -3.5, 2013: -2.9, 2014: -2.9,
+  2015: -2.8, 2016: -2.7, 2017: -2.8, 2018: -3.0, 2019: -2.8,
+  2020: -3.3, 2021: -3.9, 2022: -3.7, 2023: -3.2, 2024: -3.0,
+});
+
+const sp500 = dp({
+  1975: 31.5, 1976: 19.1, 1977: -11.5, 1978: 1.1, 1979: 12.3,
+  1980: 25.8, 1981: -9.7, 1982: 14.8, 1983: 17.3, 1984: 1.4,
+  1985: 26.3, 1986: 14.6, 1987: 2.0, 1988: 12.4, 1989: 27.3,
+  1990: -6.6, 1991: 26.3, 1992: 4.5, 1993: 7.1, 1994: -1.5,
+  1995: 34.1, 1996: 20.3, 1997: 31.0, 1998: 26.7, 1999: 19.5,
+  2000: -10.1, 2001: -13.0, 2002: -23.4, 2003: 26.4, 2004: 9.0,
+  2005: 3.0, 2006: 13.6, 2007: 3.5, 2008: -38.5, 2009: 23.5,
+  2010: 12.8, 2011: 0.0, 2012: 13.4, 2013: 29.6, 2014: 11.4,
+  2015: -0.7, 2016: 9.5, 2017: 19.4, 2018: -6.2, 2019: 28.9,
+  2020: 16.3, 2021: 26.9, 2022: -19.4, 2023: 24.2, 2024: 23.3,
+});
+
+// ── GOVERNMENT FINANCE ─────────────────────────────────────────────────────
+
+const budgetBalance = dp({
+  1975: -3.4, 1976: -4.2, 1977: -2.7, 1978: -2.7, 1979: -1.6,
+  1980: -2.7, 1981: -2.5, 1982: -3.9, 1983: -5.9, 1984: -4.8,
+  1985: -5.0, 1986: -4.9, 1987: -3.2, 1988: -3.1, 1989: -2.8,
+  1990: -3.8, 1991: -4.4, 1992: -4.6, 1993: -3.8, 1994: -2.9,
+  1995: -2.2, 1996: -1.4, 1997: -0.3, 1998: 0.8, 1999: 1.4,
+  2000: 2.3, 2001: 1.3, 2002: -1.5, 2003: -3.4, 2004: -3.5,
+  2005: -2.5, 2006: -1.9, 2007: -1.1, 2008: -3.1, 2009: -9.8,
+  2010: -8.7, 2011: -8.5, 2012: -6.8, 2013: -4.1, 2014: -2.8,
+  2015: -2.5, 2016: -3.2, 2017: -3.5, 2018: -3.8, 2019: -4.7,
+  2020: -14.9, 2021: -12.3, 2022: -5.4, 2023: -6.3, 2024: -7.0,
+});
+
+const federalDebt = dp({
+  1975: 34.7, 1976: 36.2, 1977: 35.8, 1978: 35.2, 1979: 33.1,
+  1980: 33.3, 1981: 32.5, 1982: 35.3, 1983: 40.1, 1984: 40.8,
+  1985: 43.8, 1986: 48.5, 1987: 50.6, 1988: 51.8, 1989: 53.0,
+  1990: 56.0, 1991: 60.7, 1992: 64.2, 1993: 66.6, 1994: 66.6,
+  1995: 67.2, 1996: 67.3, 1997: 65.7, 1998: 63.0, 1999: 60.9,
+  2000: 57.3, 2001: 56.4, 2002: 59.7, 2003: 62.5, 2004: 63.5,
+  2005: 63.5, 2006: 63.8, 2007: 64.6, 2008: 69.2, 2009: 85.0,
+  2010: 94.2, 2011: 99.0, 2012: 102.5, 2013: 104.5, 2014: 104.8,
+  2015: 104.8, 2016: 106.2, 2017: 105.4, 2018: 106.0, 2019: 107.6,
+  2020: 129.4, 2021: 124.7, 2022: 121.7, 2023: 123.3, 2024: 124.0,
+});
+
+const federalRevenue = dp({
+  1975: 18.5, 1976: 17.6, 1977: 18.5, 1978: 18.5, 1979: 19.0,
+  1980: 19.6, 1981: 20.1, 1982: 19.8, 1983: 18.0, 1984: 17.4,
+  1985: 17.7, 1986: 17.5, 1987: 18.4, 1988: 18.1, 1989: 18.4,
+  1990: 18.0, 1991: 17.9, 1992: 17.5, 1993: 17.5, 1994: 18.1,
+  1995: 18.5, 1996: 19.0, 1997: 19.6, 1998: 20.0, 1999: 20.0,
+  2000: 20.6, 2001: 19.8, 2002: 17.9, 2003: 16.5, 2004: 16.3,
+  2005: 17.6, 2006: 18.4, 2007: 18.5, 2008: 17.7, 2009: 15.1,
+  2010: 15.1, 2011: 15.4, 2012: 15.8, 2013: 17.0, 2014: 17.7,
+  2015: 18.3, 2016: 17.8, 2017: 17.3, 2018: 16.4, 2019: 16.3,
+  2020: 16.3, 2021: 18.1, 2022: 19.7, 2023: 17.5, 2024: 17.2,
+});
+
+const federalSpending = dp({
+  1975: 21.9, 1976: 21.8, 1977: 21.2, 1978: 21.2, 1979: 20.6,
+  1980: 22.3, 1981: 22.7, 1982: 23.7, 1983: 23.9, 1984: 22.2,
+  1985: 22.7, 1986: 22.4, 1987: 21.6, 1988: 21.2, 1989: 21.2,
+  1990: 21.8, 1991: 22.3, 1992: 22.1, 1993: 21.3, 1994: 21.0,
+  1995: 20.7, 1996: 20.4, 1997: 19.9, 1998: 19.2, 1999: 18.6,
+  2000: 18.3, 2001: 18.5, 2002: 19.4, 2003: 19.9, 2004: 19.8,
+  2005: 20.1, 2006: 20.3, 2007: 19.6, 2008: 20.8, 2009: 24.9,
+  2010: 23.8, 2011: 23.9, 2012: 22.6, 2013: 21.1, 2014: 20.5,
+  2015: 20.8, 2016: 21.0, 2017: 20.8, 2018: 20.2, 2019: 21.0,
+  2020: 31.2, 2021: 30.4, 2022: 25.1, 2023: 23.8, 2024: 24.2,
+});
+
+// ── CRIME & SAFETY ─────────────────────────────────────────────────────────
+
+const violentCrime = dp({
+  1975: 481.5, 1976: 467.8, 1977: 475.9, 1978: 497.8, 1979: 548.9,
+  1980: 596.6, 1981: 594.3, 1982: 571.1, 1983: 537.7, 1984: 539.2,
+  1985: 556.6, 1986: 617.7, 1987: 609.7, 1988: 637.2, 1989: 663.1,
+  1990: 729.6, 1991: 758.2, 1992: 757.5, 1993: 747.1, 1994: 713.6,
+  1995: 684.5, 1996: 636.6, 1997: 611.0, 1998: 567.6, 1999: 523.0,
+  2000: 506.5, 2001: 504.5, 2002: 494.4, 2003: 475.8, 2004: 463.2,
+  2005: 469.0, 2006: 479.3, 2007: 471.8, 2008: 458.6, 2009: 431.9,
+  2010: 404.5, 2011: 387.1, 2012: 387.8, 2013: 369.1, 2014: 365.5,
+  2015: 373.7, 2016: 397.5, 2017: 394.9, 2018: 381.4, 2019: 366.7,
+  2020: 398.5, 2021: 395.7, 2022: 380.7, 2023: 363.0, 2024: 355.0,
+});
+
+const propertyCrime = dp({
+  1975: 4812, 1976: 4819, 1977: 4602, 1978: 4642, 1979: 5017,
+  1980: 5353, 1981: 5264, 1982: 5032, 1983: 4637, 1984: 4492,
+  1985: 4651, 1986: 4863, 1987: 4940, 1988: 5027, 1989: 5078,
+  1990: 5073, 1991: 5140, 1992: 4903, 1993: 4740, 1994: 4660,
+  1995: 4591, 1996: 4451, 1997: 4316, 1998: 4052, 1999: 3744,
+  2000: 3618, 2001: 3658, 2002: 3631, 2003: 3588, 2004: 3514,
+  2005: 3432, 2006: 3346, 2007: 3264, 2008: 3213, 2009: 3036,
+  2010: 2942, 2011: 2909, 2012: 2860, 2013: 2731, 2014: 2597,
+  2015: 2487, 2016: 2450, 2017: 2362, 2018: 2200, 2019: 2110,
+  2020: 1958, 2021: 1832, 2022: 1954, 2023: 1900, 2024: 1880,
+});
+
+const incarcerationRate = dp({
+  1975: 111, 1976: 114, 1977: 118, 1978: 131, 1979: 139,
+  1980: 152, 1981: 169, 1982: 192, 1983: 210, 1984: 228,
+  1985: 247, 1986: 261, 1987: 278, 1988: 297, 1989: 316,
+  1990: 297, 1991: 313, 1992: 332, 1993: 359, 1994: 389,
+  1995: 411, 1996: 427, 1997: 445, 1998: 461, 1999: 476,
+  2000: 478, 2001: 470, 2002: 477, 2003: 482, 2004: 486,
+  2005: 491, 2006: 501, 2007: 506, 2008: 506, 2009: 502,
+  2010: 500, 2011: 492, 2012: 481, 2013: 478, 2014: 471,
+  2015: 458, 2016: 450, 2017: 440, 2018: 431, 2019: 419,
+  2020: 358, 2021: 350, 2022: 355, 2023: 360, 2024: 365,
+});
+
+const drugOverdoses = dp({
+  1975: 1.3, 1976: 1.4, 1977: 1.4, 1978: 1.5, 1979: 1.6,
+  1980: 1.5, 1981: 1.5, 1982: 1.6, 1983: 1.6, 1984: 1.7,
+  1985: 1.8, 1986: 1.9, 1987: 2.0, 1988: 2.2, 1989: 2.5,
+  1990: 3.1, 1991: 3.3, 1992: 3.6, 1993: 3.9, 1994: 4.2,
+  1995: 4.5, 1996: 5.0, 1997: 5.6, 1998: 5.8, 1999: 6.1,
+  2000: 6.9, 2001: 7.5, 2002: 8.2, 2003: 9.1, 2004: 10.2,
+  2005: 11.2, 2006: 13.8, 2007: 13.8, 2008: 14.3, 2009: 12.9,
+  2010: 12.4, 2011: 13.2, 2012: 13.1, 2013: 13.8, 2014: 14.7,
+  2015: 16.3, 2016: 19.8, 2017: 21.7, 2018: 20.7, 2019: 21.6,
+  2020: 28.3, 2021: 32.4, 2022: 32.6, 2023: 31.3, 2024: 28.0,
+});
+
+// ── HOUSEHOLD FINANCES ─────────────────────────────────────────────────────
+
+const medianIncome = dp({
+  1975: 51000, 1976: 52800, 1977: 53700, 1978: 55400, 1979: 55400,
+  1980: 53600, 1981: 52200, 1982: 51400, 1983: 50800, 1984: 52600,
+  1985: 54200, 1986: 56500, 1987: 57200, 1988: 57400, 1989: 58700,
+  1990: 57900, 1991: 56700, 1992: 56300, 1993: 56000, 1994: 56800,
+  1995: 58400, 1996: 59200, 1997: 61200, 1998: 63900, 1999: 65700,
+  2000: 66800, 2001: 64700, 2002: 63200, 2003: 62300, 2004: 62500,
+  2005: 63600, 2006: 65200, 2007: 66500, 2008: 64800, 2009: 62000,
+  2010: 60400, 2011: 59100, 2012: 59900, 2013: 59800, 2014: 60100,
+  2015: 62400, 2016: 64100, 2017: 65800, 2018: 67500, 2019: 69900,
+  2020: 68800, 2021: 71900, 2022: 72100, 2023: 74580, 2024: 75800,
+});
+
+const povertyRate = dp({
+  1975: 12.3, 1976: 11.8, 1977: 11.6, 1978: 11.4, 1979: 11.7,
+  1980: 13.0, 1981: 14.0, 1982: 15.0, 1983: 15.2, 1984: 14.4,
+  1985: 14.0, 1986: 13.6, 1987: 13.4, 1988: 13.0, 1989: 12.8,
+  1990: 13.5, 1991: 14.2, 1992: 14.8, 1993: 15.1, 1994: 14.5,
+  1995: 13.8, 1996: 13.7, 1997: 13.3, 1998: 12.7, 1999: 11.9,
+  2000: 11.3, 2001: 11.7, 2002: 12.1, 2003: 12.5, 2004: 12.7,
+  2005: 12.6, 2006: 12.3, 2007: 12.5, 2008: 13.2, 2009: 14.3,
+  2010: 15.1, 2011: 15.0, 2012: 15.0, 2013: 14.5, 2014: 14.8,
+  2015: 13.5, 2016: 12.7, 2017: 12.3, 2018: 11.8, 2019: 10.5,
+  2020: 11.4, 2021: 7.8, 2022: 11.5, 2023: 12.9, 2024: 12.5,
+});
+
+const homeownership = dp({
+  1975: 64.6, 1976: 64.9, 1977: 65.0, 1978: 65.2, 1979: 65.7,
+  1980: 65.6, 1981: 65.4, 1982: 65.0, 1983: 64.9, 1984: 64.5,
+  1985: 64.0, 1986: 63.9, 1987: 64.0, 1988: 63.8, 1989: 63.9,
+  1990: 63.9, 1991: 64.1, 1992: 64.1, 1993: 64.0, 1994: 64.0,
+  1995: 65.1, 1996: 65.4, 1997: 65.7, 1998: 66.3, 1999: 66.8,
+  2000: 67.4, 2001: 67.8, 2002: 67.9, 2003: 68.3, 2004: 69.0,
+  2005: 68.9, 2006: 68.8, 2007: 68.2, 2008: 67.8, 2009: 67.3,
+  2010: 66.9, 2011: 66.1, 2012: 65.5, 2013: 65.1, 2014: 64.5,
+  2015: 63.7, 2016: 63.4, 2017: 63.9, 2018: 64.4, 2019: 65.1,
+  2020: 65.8, 2021: 65.4, 2022: 65.8, 2023: 65.6, 2024: 65.7,
+});
+
+const savingsRate = dp({
+  1975: 9.6, 1976: 8.7, 1977: 7.5, 1978: 7.8, 1979: 7.9,
+  1980: 9.8, 1981: 9.8, 1982: 10.8, 1983: 8.5, 1984: 9.9,
+  1985: 8.3, 1986: 7.5, 1987: 6.7, 1988: 7.2, 1989: 7.1,
+  1990: 7.0, 1991: 8.3, 1992: 7.6, 1993: 5.7, 1994: 4.8,
+  1995: 4.6, 1996: 4.0, 1997: 3.6, 1998: 4.3, 1999: 2.4,
+  2000: 2.9, 2001: 4.0, 2002: 5.4, 2003: 4.7, 2004: 4.4,
+  2005: 2.6, 2006: 3.5, 2007: 3.2, 2008: 5.0, 2009: 5.9,
+  2010: 5.5, 2011: 6.0, 2012: 7.6, 2013: 4.9, 2014: 5.6,
+  2015: 6.1, 2016: 5.9, 2017: 7.3, 2018: 7.6, 2019: 7.5,
+  2020: 16.8, 2021: 12.0, 2022: 3.3, 2023: 4.6, 2024: 4.7,
+});
+
+// ── HEALTH & QUALITY OF LIFE ───────────────────────────────────────────────
+
+const lifeExpectancy = dp({
+  1975: 72.6, 1976: 72.9, 1977: 73.3, 1978: 73.5, 1979: 73.9,
+  1980: 73.7, 1981: 74.1, 1982: 74.5, 1983: 74.6, 1984: 74.7,
+  1985: 74.7, 1986: 74.7, 1987: 74.9, 1988: 74.9, 1989: 75.1,
+  1990: 75.4, 1991: 75.5, 1992: 75.8, 1993: 75.5, 1994: 75.7,
+  1995: 75.8, 1996: 76.1, 1997: 76.5, 1998: 76.7, 1999: 76.7,
+  2000: 77.0, 2001: 77.2, 2002: 77.3, 2003: 77.5, 2004: 77.8,
+  2005: 77.8, 2006: 78.1, 2007: 77.9, 2008: 78.1, 2009: 78.5,
+  2010: 78.7, 2011: 78.7, 2012: 78.8, 2013: 78.8, 2014: 79.1,
+  2015: 78.7, 2016: 78.7, 2017: 78.6, 2018: 78.7, 2019: 78.8,
+  2020: 77.0, 2021: 76.4, 2022: 77.5, 2023: 78.4, 2024: 78.7,
+});
+
+const infantMortality = dp({
+  1975: 16.1, 1976: 15.2, 1977: 14.1, 1978: 13.8, 1979: 13.1,
+  1980: 12.6, 1981: 11.9, 1982: 11.5, 1983: 11.2, 1984: 10.8,
+  1985: 10.6, 1986: 10.4, 1987: 10.1, 1988: 10.0, 1989: 9.8,
+  1990: 9.2, 1991: 8.9, 1992: 8.5, 1993: 8.4, 1994: 8.0,
+  1995: 7.6, 1996: 7.3, 1997: 7.2, 1998: 7.2, 1999: 7.1,
+  2000: 6.9, 2001: 6.8, 2002: 7.0, 2003: 6.9, 2004: 6.8,
+  2005: 6.9, 2006: 6.7, 2007: 6.8, 2008: 6.6, 2009: 6.4,
+  2010: 6.1, 2011: 6.1, 2012: 6.0, 2013: 6.0, 2014: 5.8,
+  2015: 5.9, 2016: 5.9, 2017: 5.8, 2018: 5.7, 2019: 5.6,
+  2020: 5.4, 2021: 5.4, 2022: 5.6, 2023: 5.5, 2024: 5.4,
+});
+
+const uninsuredRate = buildDataPoints({
+  1987: 12.9, 1988: 13.4, 1989: 13.6, 1990: 13.9, 1991: 14.1,
+  1992: 14.7, 1993: 15.3, 1994: 15.2, 1995: 15.4, 1996: 15.6,
+  1997: 16.1, 1998: 16.3, 1999: 15.9, 2000: 14.2, 2001: 14.6,
+  2002: 15.2, 2003: 15.6, 2004: 15.7, 2005: 15.9, 2006: 15.8,
+  2007: 15.3, 2008: 15.4, 2009: 16.7, 2010: 16.3, 2011: 15.7,
+  2012: 15.4, 2013: 13.3, 2014: 11.7, 2015: 9.1, 2016: 8.6,
+  2017: 8.8, 2018: 8.9, 2019: 9.2, 2020: 8.6, 2021: 8.3,
+  2022: 7.9, 2023: 7.8, 2024: 8.0,
+});
+
+const obesityRate = dp({
+  1975: 13.4, 1980: 14.5, 1985: 16.0, 1990: 19.8,
+  1995: 23.3, 2000: 30.5, 2005: 35.1, 2010: 35.9,
+  2015: 37.7, 2020: 41.9, 2021: 41.9, 2022: 40.3,
+  2023: 40.5, 2024: 40.6,
+});
+
+// ── EDUCATION ─────────────────────────────────────────────────────────────
+
+const hsGradRate = dp({
+  1975: 76.5, 1980: 76.0, 1985: 75.5, 1990: 77.6,
+  1995: 80.0, 2000: 83.0, 2005: 86.5, 2009: 88.5,
+  2010: 78.2, 2011: 79.0, 2012: 80.0, 2013: 81.4,
+  2014: 82.3, 2015: 83.2, 2016: 84.1, 2017: 85.0,
+  2018: 85.3, 2019: 85.8, 2020: 87.3, 2021: 86.5,
+  2022: 87.0, 2023: 87.3, 2024: 87.5,
+});
+
+const bachelorsDegree = dp({
+  1975: 13.9, 1976: 14.1, 1977: 14.4, 1978: 14.7, 1979: 15.0,
+  1980: 17.0, 1981: 17.4, 1982: 17.7, 1983: 18.0, 1984: 18.4,
+  1985: 19.4, 1986: 19.4, 1987: 19.9, 1988: 20.3, 1989: 21.1,
+  1990: 21.3, 1991: 21.4, 1992: 21.9, 1993: 22.2, 1994: 22.2,
+  1995: 23.0, 1996: 23.6, 1997: 23.9, 1998: 24.4, 1999: 25.2,
+  2000: 25.6, 2001: 26.1, 2002: 26.7, 2003: 27.2, 2004: 27.7,
+  2005: 28.0, 2006: 28.7, 2007: 29.4, 2008: 29.4, 2009: 29.5,
+  2010: 30.0, 2011: 30.4, 2012: 31.0, 2013: 31.9, 2014: 32.5,
+  2015: 33.0, 2016: 33.4, 2017: 34.0, 2018: 35.0, 2019: 36.0,
+  2020: 37.9, 2021: 38.1, 2022: 38.3, 2023: 38.5, 2024: 38.9,
+});
+
+const educationSpending = dp({
+  1975: 5.2, 1980: 5.8, 1985: 5.3, 1990: 5.8,
+  1995: 5.5, 2000: 5.4, 2005: 5.5, 2010: 5.9,
+  2015: 5.4, 2019: 5.4, 2020: 6.1, 2021: 6.3,
+  2022: 5.9, 2023: 5.7, 2024: 5.5,
+});
+
+const studentDebt = dp({
+  1995: 187, 2000: 261, 2005: 516, 2010: 833,
+  2015: 1228, 2019: 1512, 2020: 1567, 2021: 1600,
+  2022: 1748, 2023: 1774, 2024: 1800,
+});
+
+// ── ENVIRONMENT & ENERGY ──────────────────────────────────────────────────
+
+const co2PerCapita = dp({
+  1975: 20.0, 1976: 21.2, 1977: 21.2, 1978: 21.5, 1979: 21.3,
+  1980: 20.3, 1981: 19.4, 1982: 18.2, 1983: 18.2, 1984: 18.9,
+  1985: 18.4, 1986: 18.3, 1987: 18.9, 1988: 19.7, 1989: 19.8,
+  1990: 19.4, 1991: 19.2, 1992: 19.4, 1993: 19.6, 1994: 19.8,
+  1995: 19.9, 1996: 20.2, 1997: 20.4, 1998: 20.1, 1999: 20.2,
+  2000: 20.5, 2001: 19.9, 2002: 19.8, 2003: 19.7, 2004: 20.0,
+  2005: 19.8, 2006: 19.1, 2007: 19.2, 2008: 18.3, 2009: 16.9,
+  2010: 17.4, 2011: 17.0, 2012: 16.3, 2013: 16.6, 2014: 16.6,
+  2015: 15.8, 2016: 15.5, 2017: 15.3, 2018: 16.0, 2019: 15.2,
+  2020: 13.4, 2021: 14.2, 2022: 14.8, 2023: 14.5, 2024: 14.0,
+});
+
+const renewableEnergy = dp({
+  1975: 4.3, 1980: 5.5, 1985: 5.9, 1990: 6.8,
+  1995: 7.2, 2000: 6.1, 2001: 5.9, 2002: 6.0,
+  2003: 5.8, 2004: 6.1, 2005: 6.5, 2006: 6.9,
+  2007: 6.8, 2008: 7.2, 2009: 8.1, 2010: 8.5,
+  2011: 9.3, 2012: 9.3, 2013: 9.8, 2014: 10.1,
+  2015: 10.1, 2016: 10.6, 2017: 11.1, 2018: 11.5,
+  2019: 11.5, 2020: 12.7, 2021: 13.2, 2022: 14.1,
+  2023: 14.8, 2024: 15.5,
+});
+
+const airQualityDays = dp({
+  1980: 215, 1985: 180, 1990: 165, 1995: 140,
+  2000: 115, 2005: 100, 2010: 80, 2015: 68,
+  2019: 65, 2020: 60, 2021: 65, 2022: 62,
+  2023: 68, 2024: 65,
+});
+
+// ── INNOVATION & TECHNOLOGY ───────────────────────────────────────────────
+
+const rdSpending = dp({
+  1975: 2.17, 1980: 2.37, 1985: 2.73, 1990: 2.58,
+  1995: 2.51, 2000: 2.72, 2001: 2.74, 2002: 2.66,
+  2003: 2.64, 2004: 2.60, 2005: 2.62, 2006: 2.61,
+  2007: 2.63, 2008: 2.77, 2009: 2.91, 2010: 2.74,
+  2011: 2.75, 2012: 2.71, 2013: 2.71, 2014: 2.73,
+  2015: 2.76, 2016: 2.77, 2017: 2.83, 2018: 3.06,
+  2019: 3.18, 2020: 3.43, 2021: 3.36, 2022: 3.47,
+  2023: 3.50, 2024: 3.55,
+});
+
+const patentApplications = dp({
+  1975: 107, 1980: 113, 1985: 127, 1990: 177,
+  1995: 228, 2000: 344, 2001: 346, 2002: 357,
+  2003: 355, 2004: 382, 2005: 391, 2006: 444,
+  2007: 468, 2008: 487, 2009: 483, 2010: 521,
+  2011: 544, 2012: 578, 2013: 609, 2014: 643,
+  2015: 629, 2016: 650, 2017: 652, 2018: 646,
+  2019: 621, 2020: 597, 2021: 647, 2022: 647,
+  2023: 670, 2024: 680,
+});
+
+const broadbandAccess = buildDataPoints({
+  2000: 3.0, 2001: 5.0, 2002: 8.0, 2003: 12.0,
+  2004: 17.0, 2005: 22.0, 2006: 28.0, 2007: 35.0,
+  2008: 42.0, 2009: 47.0, 2010: 52.0, 2011: 57.0,
+  2012: 62.0, 2013: 65.0, 2014: 68.0, 2015: 71.0,
+  2016: 73.0, 2017: 75.0, 2018: 77.0, 2019: 79.0,
+  2020: 82.0, 2021: 84.0, 2022: 86.0, 2023: 87.0,
+  2024: 88.0,
+});
+
+// ── SOCIAL PROGRESS ────────────────────────────────────────────────────────
+
+const giniCoefficient = dp({
+  1975: 0.397, 1980: 0.403, 1985: 0.419, 1990: 0.428,
+  1995: 0.450, 2000: 0.462, 2005: 0.469, 2010: 0.470,
+  2015: 0.479, 2019: 0.481, 2020: 0.489, 2021: 0.494,
+  2022: 0.494, 2023: 0.490, 2024: 0.490,
+});
+
+const foodInsecurity = buildDataPoints({
+  1995: 11.9, 1996: 11.5, 1997: 11.2, 1998: 10.2, 1999: 10.1,
+  2000: 10.5, 2001: 10.7, 2002: 11.1, 2003: 11.2, 2004: 11.9,
+  2005: 11.0, 2006: 10.9, 2007: 11.1, 2008: 14.6, 2009: 14.7,
+  2010: 14.5, 2011: 14.9, 2012: 14.5, 2013: 14.3, 2014: 14.0,
+  2015: 12.7, 2016: 12.3, 2017: 11.8, 2018: 11.1, 2019: 10.5,
+  2020: 13.8, 2021: 10.2, 2022: 12.8, 2023: 13.5, 2024: 13.0,
+});
+
+const workingAgeParticipation = dp({
+  1975: 61.2, 1976: 61.6, 1977: 62.3, 1978: 63.2, 1979: 63.7,
+  1980: 63.8, 1981: 63.9, 1982: 64.0, 1983: 64.0, 1984: 64.4,
+  1985: 64.8, 1986: 65.3, 1987: 65.6, 1988: 65.9, 1989: 66.5,
+  1990: 66.4, 1991: 66.0, 1992: 66.3, 1993: 66.2, 1994: 66.6,
+  1995: 66.6, 1996: 66.8, 1997: 67.1, 1998: 67.1, 1999: 67.1,
+  2000: 67.1, 2001: 66.8, 2002: 66.6, 2003: 66.2, 2004: 66.0,
+  2005: 66.0, 2006: 66.2, 2007: 66.0, 2008: 66.0, 2009: 65.4,
+  2010: 64.7, 2011: 64.1, 2012: 63.7, 2013: 63.2, 2014: 62.9,
+  2015: 62.7, 2016: 62.8, 2017: 62.9, 2018: 63.1, 2019: 63.3,
+  2020: 61.7, 2021: 61.7, 2022: 62.2, 2023: 62.5, 2024: 62.6,
+});
+
+// ── INFRASTRUCTURE ─────────────────────────────────────────────────────────
+
+const deficientBridges = buildDataPoints({
+  1992: 22.4, 1993: 22.1, 1994: 21.8, 1995: 21.5, 1996: 21.3,
+  1997: 20.8, 1998: 20.3, 1999: 19.8, 2000: 18.7, 2001: 18.3,
+  2002: 17.8, 2003: 17.3, 2004: 16.9, 2005: 14.3, 2006: 13.9,
+  2007: 13.5, 2008: 13.2, 2009: 12.8, 2010: 11.5, 2011: 11.2,
+  2012: 11.0, 2013: 10.7, 2014: 10.2, 2015: 9.8, 2016: 9.5,
+  2017: 9.1, 2018: 8.7, 2019: 8.3, 2020: 7.5, 2021: 7.3,
+  2022: 7.0, 2023: 6.8, 2024: 6.5,
+});
+
+const publicTransitRidership = dp({
+  1975: 6.9, 1980: 8.2, 1985: 8.6, 1990: 8.8,
+  1995: 7.8, 2000: 9.4, 2005: 9.7, 2010: 10.2,
+  2015: 10.6, 2019: 9.9, 2020: 5.0, 2021: 5.8,
+  2022: 7.6, 2023: 8.2, 2024: 8.5,
+});
+
+// ── CATEGORY DEFINITIONS ───────────────────────────────────────────────────
+
+export const CATEGORIES: Category[] = [
+  {
+    id: 'economic',
+    name: 'Economic Indicators',
+    icon: '📈',
+    description: 'Core measures of economic health, growth, and market performance.',
+    kpis: [
+      {
+        id: 'gdp-growth',
+        name: 'GDP Growth Rate',
+        unit: '% annual',
+        description: 'Annual percentage change in real Gross Domestic Product.',
+        source: 'Bureau of Economic Analysis',
+        sourceUrl: 'https://www.bea.gov',
+        higherIsBetter: true,
+        format: 'percent',
+        decimals: 1,
+        data: gdpGrowth,
+      },
+      {
+        id: 'unemployment',
+        name: 'Unemployment Rate',
+        unit: '%',
+        description: 'Annual average percentage of the labor force that is jobless and seeking work.',
+        source: 'Bureau of Labor Statistics',
+        sourceUrl: 'https://www.bls.gov',
+        higherIsBetter: false,
+        format: 'percent',
+        decimals: 1,
+        data: unemployment,
+      },
+      {
+        id: 'inflation',
+        name: 'Inflation Rate (CPI)',
+        unit: '% annual',
+        description: 'Annual percentage change in the Consumer Price Index.',
+        source: 'Bureau of Labor Statistics',
+        sourceUrl: 'https://www.bls.gov',
+        higherIsBetter: false,
+        format: 'percent',
+        decimals: 1,
+        data: inflation,
+      },
+      {
+        id: 'trade-balance',
+        name: 'Trade Balance',
+        unit: '% of GDP',
+        description: 'Goods and services trade balance as a share of GDP. Negative indicates a deficit.',
+        source: 'U.S. Census Bureau / BEA',
+        sourceUrl: 'https://www.census.gov/foreign-trade',
+        higherIsBetter: true,
+        format: 'percent',
+        decimals: 1,
+        data: tradeBalance,
+      },
+      {
+        id: 'sp500',
+        name: 'S&P 500 Annual Return',
+        unit: '%',
+        description: 'Annual total return of the S&P 500 index.',
+        source: 'S&P Dow Jones Indices',
+        sourceUrl: 'https://www.spglobal.com',
+        higherIsBetter: true,
+        format: 'percent',
+        decimals: 1,
+        data: sp500,
+      },
+    ],
+  },
+  {
+    id: 'government',
+    name: 'Government Finance',
+    icon: '🏛️',
+    description: 'Federal budget, revenue, spending, and debt levels.',
+    kpis: [
+      {
+        id: 'budget-balance',
+        name: 'Budget Surplus / Deficit',
+        unit: '% of GDP',
+        description: 'Federal budget balance as share of GDP. Positive = surplus, negative = deficit.',
+        source: 'Office of Management & Budget',
+        sourceUrl: 'https://www.whitehouse.gov/omb',
+        higherIsBetter: true,
+        format: 'percent',
+        decimals: 1,
+        data: budgetBalance,
+      },
+      {
+        id: 'federal-debt',
+        name: 'Federal Debt',
+        unit: '% of GDP',
+        description: 'Total federal debt held by the public as a percentage of GDP.',
+        source: 'Office of Management & Budget',
+        sourceUrl: 'https://www.whitehouse.gov/omb',
+        higherIsBetter: false,
+        format: 'percent',
+        decimals: 1,
+        data: federalDebt,
+      },
+      {
+        id: 'federal-revenue',
+        name: 'Federal Revenue',
+        unit: '% of GDP',
+        description: 'Total federal government revenue as a share of GDP.',
+        source: 'Office of Management & Budget',
+        sourceUrl: 'https://www.whitehouse.gov/omb',
+        higherIsBetter: true,
+        format: 'percent',
+        decimals: 1,
+        data: federalRevenue,
+      },
+      {
+        id: 'federal-spending',
+        name: 'Federal Spending',
+        unit: '% of GDP',
+        description: 'Total federal outlays as a share of GDP.',
+        source: 'Office of Management & Budget',
+        sourceUrl: 'https://www.whitehouse.gov/omb',
+        higherIsBetter: false,
+        format: 'percent',
+        decimals: 1,
+        data: federalSpending,
+      },
+    ],
+  },
+  {
+    id: 'crime',
+    name: 'Crime & Safety',
+    icon: '🔒',
+    description: 'Violent and property crime rates, incarceration, and drug overdoses.',
+    kpis: [
+      {
+        id: 'violent-crime',
+        name: 'Violent Crime Rate',
+        unit: 'per 100k',
+        description: 'FBI-reported violent crimes (murder, rape, robbery, assault) per 100,000 people.',
+        source: 'FBI Uniform Crime Reports',
+        sourceUrl: 'https://ucr.fbi.gov',
+        higherIsBetter: false,
+        format: 'number',
+        decimals: 0,
+        data: violentCrime,
+      },
+      {
+        id: 'property-crime',
+        name: 'Property Crime Rate',
+        unit: 'per 100k',
+        description: 'FBI-reported property crimes per 100,000 people.',
+        source: 'FBI Uniform Crime Reports',
+        sourceUrl: 'https://ucr.fbi.gov',
+        higherIsBetter: false,
+        format: 'number',
+        decimals: 0,
+        data: propertyCrime,
+      },
+      {
+        id: 'incarceration',
+        name: 'Incarceration Rate',
+        unit: 'per 100k',
+        description: 'Number of prisoners sentenced per 100,000 U.S. residents.',
+        source: 'Bureau of Justice Statistics',
+        sourceUrl: 'https://bjs.ojp.gov',
+        higherIsBetter: false,
+        format: 'number',
+        decimals: 0,
+        data: incarcerationRate,
+      },
+      {
+        id: 'drug-overdoses',
+        name: 'Drug Overdose Deaths',
+        unit: 'per 100k',
+        description: 'Drug overdose death rate per 100,000 people.',
+        source: 'CDC National Center for Health Statistics',
+        sourceUrl: 'https://www.cdc.gov/nchs',
+        higherIsBetter: false,
+        format: 'decimal',
+        decimals: 1,
+        data: drugOverdoses,
+      },
+    ],
+  },
+  {
+    id: 'household',
+    name: 'Household Finances',
+    icon: '🏠',
+    description: 'Income, poverty, homeownership, and personal savings.',
+    kpis: [
+      {
+        id: 'median-income',
+        name: 'Median Household Income',
+        unit: '2023 $',
+        description: 'Inflation-adjusted median household income in 2023 dollars.',
+        source: 'U.S. Census Bureau',
+        sourceUrl: 'https://www.census.gov',
+        higherIsBetter: true,
+        format: 'dollar',
+        decimals: 0,
+        data: medianIncome,
+      },
+      {
+        id: 'poverty-rate',
+        name: 'Poverty Rate',
+        unit: '%',
+        description: 'Percentage of Americans living below the federal poverty line.',
+        source: 'U.S. Census Bureau',
+        sourceUrl: 'https://www.census.gov',
+        higherIsBetter: false,
+        format: 'percent',
+        decimals: 1,
+        data: povertyRate,
+      },
+      {
+        id: 'homeownership',
+        name: 'Homeownership Rate',
+        unit: '%',
+        description: 'Percentage of occupied housing units that are owner-occupied.',
+        source: 'U.S. Census Bureau',
+        sourceUrl: 'https://www.census.gov',
+        higherIsBetter: true,
+        format: 'percent',
+        decimals: 1,
+        data: homeownership,
+      },
+      {
+        id: 'savings-rate',
+        name: 'Personal Savings Rate',
+        unit: '%',
+        description: 'Personal savings as a percentage of disposable personal income.',
+        source: 'Bureau of Economic Analysis',
+        sourceUrl: 'https://www.bea.gov',
+        higherIsBetter: true,
+        format: 'percent',
+        decimals: 1,
+        data: savingsRate,
+      },
+    ],
+  },
+  {
+    id: 'health',
+    name: 'Health & Quality of Life',
+    icon: '❤️',
+    description: 'Life expectancy, infant mortality, healthcare access, and obesity.',
+    kpis: [
+      {
+        id: 'life-expectancy',
+        name: 'Life Expectancy',
+        unit: 'years',
+        description: 'Life expectancy at birth (all races, both sexes).',
+        source: 'CDC / National Center for Health Statistics',
+        sourceUrl: 'https://www.cdc.gov/nchs',
+        higherIsBetter: true,
+        format: 'decimal',
+        decimals: 1,
+        data: lifeExpectancy,
+      },
+      {
+        id: 'infant-mortality',
+        name: 'Infant Mortality Rate',
+        unit: 'per 1,000',
+        description: 'Deaths of infants under 1 year old per 1,000 live births.',
+        source: 'CDC / National Center for Health Statistics',
+        sourceUrl: 'https://www.cdc.gov/nchs',
+        higherIsBetter: false,
+        format: 'decimal',
+        decimals: 1,
+        data: infantMortality,
+      },
+      {
+        id: 'uninsured',
+        name: 'Uninsured Rate',
+        unit: '%',
+        description: 'Percentage of Americans without health insurance coverage.',
+        source: 'U.S. Census Bureau / NHIS',
+        sourceUrl: 'https://www.census.gov',
+        higherIsBetter: false,
+        format: 'percent',
+        decimals: 1,
+        data: uninsuredRate,
+      },
+      {
+        id: 'obesity',
+        name: 'Obesity Rate',
+        unit: '%',
+        description: 'Percentage of adults with BMI ≥ 30.',
+        source: 'CDC National Health and Nutrition Examination Survey',
+        sourceUrl: 'https://www.cdc.gov/nchs/nhanes',
+        higherIsBetter: false,
+        format: 'percent',
+        decimals: 1,
+        data: obesityRate,
+      },
+    ],
+  },
+  {
+    id: 'education',
+    name: 'Education',
+    icon: '🎓',
+    description: 'Graduation rates, college attainment, education spending, and student debt.',
+    kpis: [
+      {
+        id: 'hs-graduation',
+        name: 'High School Graduation Rate',
+        unit: '%',
+        description: 'Percentage of students graduating high school on time.',
+        source: 'National Center for Education Statistics',
+        sourceUrl: 'https://nces.ed.gov',
+        higherIsBetter: true,
+        format: 'percent',
+        decimals: 1,
+        data: hsGradRate,
+      },
+      {
+        id: 'bachelors-degree',
+        name: "Bachelor's Degree Attainment",
+        unit: '% adults 25+',
+        description: "Percentage of adults 25 and older with at least a bachelor's degree.",
+        source: 'U.S. Census Bureau',
+        sourceUrl: 'https://www.census.gov',
+        higherIsBetter: true,
+        format: 'percent',
+        decimals: 1,
+        data: bachelorsDegree,
+      },
+      {
+        id: 'education-spending',
+        name: 'Public Education Spending',
+        unit: '% of GDP',
+        description: 'Total public education expenditure as a share of GDP.',
+        source: 'National Center for Education Statistics',
+        sourceUrl: 'https://nces.ed.gov',
+        higherIsBetter: true,
+        format: 'percent',
+        decimals: 1,
+        data: educationSpending,
+      },
+      {
+        id: 'student-debt',
+        name: 'Student Loan Debt',
+        unit: '$ billion',
+        description: 'Total outstanding federal and private student loan debt.',
+        source: 'Federal Reserve',
+        sourceUrl: 'https://www.federalreserve.gov',
+        higherIsBetter: false,
+        format: 'number',
+        decimals: 0,
+        data: studentDebt,
+      },
+    ],
+  },
+  {
+    id: 'environment',
+    name: 'Environment & Energy',
+    icon: '🌱',
+    description: 'Carbon emissions, renewable energy adoption, and air quality.',
+    kpis: [
+      {
+        id: 'co2-per-capita',
+        name: 'CO₂ Emissions per Capita',
+        unit: 'metric tons',
+        description: 'Annual CO₂ emissions per person in metric tons.',
+        source: 'EPA / U.S. Energy Information Administration',
+        sourceUrl: 'https://www.eia.gov',
+        higherIsBetter: false,
+        format: 'decimal',
+        decimals: 1,
+        data: co2PerCapita,
+      },
+      {
+        id: 'renewable-energy',
+        name: 'Renewable Energy Share',
+        unit: '% of total',
+        description: 'Renewable energy as a share of total U.S. energy consumption.',
+        source: 'U.S. Energy Information Administration',
+        sourceUrl: 'https://www.eia.gov',
+        higherIsBetter: true,
+        format: 'percent',
+        decimals: 1,
+        data: renewableEnergy,
+      },
+      {
+        id: 'air-quality',
+        name: 'Poor Air Quality Days',
+        unit: 'days/year avg',
+        description: 'Average number of days per year with AQI above 100 across U.S. counties.',
+        source: 'EPA Air Quality System',
+        sourceUrl: 'https://www.epa.gov/outdoor-air-quality-data',
+        higherIsBetter: false,
+        format: 'number',
+        decimals: 0,
+        data: airQualityDays,
+      },
+    ],
+  },
+  {
+    id: 'innovation',
+    name: 'Innovation & Technology',
+    icon: '💡',
+    description: 'R&D investment, patents, and broadband connectivity.',
+    kpis: [
+      {
+        id: 'rd-spending',
+        name: 'R&D Spending',
+        unit: '% of GDP',
+        description: 'Total U.S. research and development expenditure as a share of GDP.',
+        source: 'National Science Foundation',
+        sourceUrl: 'https://www.nsf.gov',
+        higherIsBetter: true,
+        format: 'percent',
+        decimals: 2,
+        data: rdSpending,
+      },
+      {
+        id: 'patents',
+        name: 'Patent Applications',
+        unit: 'thousands',
+        description: 'Annual U.S. patent applications filed with the USPTO.',
+        source: 'U.S. Patent and Trademark Office',
+        sourceUrl: 'https://www.uspto.gov',
+        higherIsBetter: true,
+        format: 'number',
+        decimals: 0,
+        data: patentApplications,
+      },
+      {
+        id: 'broadband',
+        name: 'Broadband Access',
+        unit: '% households',
+        description: 'Percentage of households with broadband internet access.',
+        source: 'FCC / U.S. Census Bureau',
+        sourceUrl: 'https://www.fcc.gov',
+        higherIsBetter: true,
+        format: 'percent',
+        decimals: 1,
+        data: broadbandAccess,
+      },
+    ],
+  },
+  {
+    id: 'social',
+    name: 'Social Progress',
+    icon: '👥',
+    description: 'Income inequality, food insecurity, and labor force participation.',
+    kpis: [
+      {
+        id: 'gini',
+        name: 'Income Inequality (Gini)',
+        unit: 'coefficient',
+        description: 'Gini coefficient measuring income inequality (0 = perfect equality, 1 = maximum inequality).',
+        source: 'U.S. Census Bureau',
+        sourceUrl: 'https://www.census.gov',
+        higherIsBetter: false,
+        format: 'decimal',
+        decimals: 3,
+        data: giniCoefficient,
+      },
+      {
+        id: 'food-insecurity',
+        name: 'Food Insecurity Rate',
+        unit: '%',
+        description: 'Percentage of households experiencing food insecurity.',
+        source: 'USDA Economic Research Service',
+        sourceUrl: 'https://www.ers.usda.gov',
+        higherIsBetter: false,
+        format: 'percent',
+        decimals: 1,
+        data: foodInsecurity,
+      },
+      {
+        id: 'labor-participation',
+        name: 'Labor Force Participation',
+        unit: '%',
+        description: 'Percentage of working-age population (16+) in the labor force.',
+        source: 'Bureau of Labor Statistics',
+        sourceUrl: 'https://www.bls.gov',
+        higherIsBetter: true,
+        format: 'percent',
+        decimals: 1,
+        data: workingAgeParticipation,
+      },
+    ],
+  },
+  {
+    id: 'infrastructure',
+    name: 'Infrastructure',
+    icon: '🔧',
+    description: 'Bridge conditions, transit ridership, and broadband connectivity.',
+    kpis: [
+      {
+        id: 'deficient-bridges',
+        name: 'Structurally Deficient Bridges',
+        unit: '% of total',
+        description: 'Percentage of U.S. bridges rated as structurally deficient.',
+        source: 'Federal Highway Administration',
+        sourceUrl: 'https://www.fhwa.dot.gov',
+        higherIsBetter: false,
+        format: 'percent',
+        decimals: 1,
+        data: deficientBridges,
+      },
+      {
+        id: 'transit-ridership',
+        name: 'Public Transit Ridership',
+        unit: 'billion trips',
+        description: 'Annual public transit trips taken in billions.',
+        source: 'American Public Transportation Association',
+        sourceUrl: 'https://www.apta.com',
+        higherIsBetter: true,
+        format: 'decimal',
+        decimals: 1,
+        data: publicTransitRidership,
+      },
+    ],
+  },
+];
+
+export const ALL_KPIS = CATEGORIES.flatMap((c) => c.kpis);
