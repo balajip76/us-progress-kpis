@@ -5,6 +5,7 @@ import type { KPI, DataPoint, CagrResult } from '@/types';
 import { formatValue, computeCagr, PALETTE, CAGR_LINE_COLOR } from '@/lib/utils';
 import KPIChart from './KPIChart';
 import PartyComparison from './PartyComparison';
+import { AS_OF } from '@/data/asOf';
 
 interface Props {
   kpi: KPI;
@@ -21,6 +22,7 @@ export default function KPICard({ kpi, data, showPartyShading, showCagr, startYe
   const sorted = useMemo(() => [...data].filter((d) => d.value !== null).sort((a, b) => b.year - a.year), [data]);
   const latest   = sorted[0];
   const previous = sorted[1];
+  const dataThrough = AS_OF[kpi.id] ?? (latest ? `${latest.year} (est.)` : null);
 
   const delta = latest && previous && latest.value !== null && previous.value !== null
     ? latest.value - previous.value : null;
@@ -129,6 +131,7 @@ export default function KPICard({ kpi, data, showPartyShading, showCagr, startYe
         >
           {kpi.source} ↗
         </a>
+        {dataThrough && (<span className="text-xs" style={{ color: PALETTE.medium }} title="Period covered by the most recent data point">Data through {dataThrough}</span>)}
         <button
           onClick={() => setShowComparison((v) => !v)}
           className="text-xs font-medium px-3 py-1 rounded-lg transition-all duration-150"
